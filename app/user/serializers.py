@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('email', 'password', 'name')
-        extra_kwargs = {'password': {'write_only':True, 'min_length': 5}}
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""
@@ -26,7 +25,7 @@ class AuthTokenSerializer(serializers.Serializer):
         trim_whitespace=False,
     )
 
-    def validate(self,attrs):
+    def validate(self, attrs):
         """Validate and authenticate the user"""
         email = attrs.get('email')
         password = attrs.get('password')
@@ -38,7 +37,7 @@ class AuthTokenSerializer(serializers.Serializer):
         )
         if not user:
             msg = _('Unable to authenticate with provided credentials')
-            raise serializers.ValidationError(msg,code='authentication')
+            raise serializers.ValidationError(msg, code='authentication')
 
         attrs['user'] = user
         return attrs
